@@ -1,5 +1,7 @@
 package io.codementor.streaming;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,10 +14,18 @@ public class KinesisUtils {
 
     public static final String STREAM_NAME = "metrics-stream";
 
+    public static final String PROCESSOR_NAME = "metrics-processor";
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static AmazonKinesis createKinesisClient() {
         return AmazonKinesisClientBuilder
+                .standard()
+                .build();
+    }
+
+    public static AmazonDynamoDB createDynamoDBClient() {
+        return AmazonDynamoDBClientBuilder
                 .standard()
                 .build();
     }

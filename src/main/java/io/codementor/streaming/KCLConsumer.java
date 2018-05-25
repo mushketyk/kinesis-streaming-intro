@@ -6,14 +6,18 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import io.codementor.streaming.kcl.MetricsProcessorFactory;
 
+import static io.codementor.streaming.KinesisUtils.PROCESSOR_NAME;
+import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
+
 public class KCLConsumer {
+
     public static void main(String[] args) {
         // Configuration for a worker instance
         final KinesisClientLibConfiguration config = new KinesisClientLibConfiguration(
                 // Name of our application
-                "metrics-processor",
+                PROCESSOR_NAME,
                 // Name of stream to process
-                KinesisUtils.STREAM_NAME,
+                STREAM_NAME,
                 new DefaultAWSCredentialsProviderChain(),
                 // Name of this KCL worker instance. Should be different for different processes/machines
                 "worker-1"
