@@ -19,7 +19,7 @@ public class CreateStream {
         // Set the name of a new stream
         createStreamRequest.setStreamName(STREAM_NAME);
         // Set initial number of shards
-        createStreamRequest.setShardCount(4);
+        createStreamRequest.setShardCount(2);
 
         client.createStream(createStreamRequest);
 
