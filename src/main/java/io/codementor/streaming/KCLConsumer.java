@@ -6,16 +6,19 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import io.codementor.streaming.kcl.MetricsProcessorFactory;
 
-import static io.codementor.streaming.KinesisUtils.PROCESSOR_NAME;
-import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
+import static io.codementor.streaming.Utils.KCL_PROCESSOR_NAME;
+import static io.codementor.streaming.Utils.STREAM_NAME;
 
+/**
+ * A Kinesis consumer based on Kinesis Consumer Library.
+ */
 public class KCLConsumer {
 
     public static void main(String[] args) {
         // Configuration for a worker instance
         final KinesisClientLibConfiguration config = new KinesisClientLibConfiguration(
                 // Name of our application
-                PROCESSOR_NAME,
+                KCL_PROCESSOR_NAME,
                 // Name of stream to process
                 STREAM_NAME,
                 new DefaultAWSCredentialsProviderChain(),

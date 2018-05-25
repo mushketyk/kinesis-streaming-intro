@@ -9,9 +9,12 @@ import com.amazonaws.services.kinesis.clientlibrary.types.InitializationInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ProcessRecordsInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownInput;
 import com.amazonaws.services.kinesis.model.Record;
-import io.codementor.streaming.KinesisUtils;
+import io.codementor.streaming.Utils;
 import io.codementor.streaming.Metric;
 
+/**
+ * Metrics processor for Kinesis Client Library.
+ */
 public class MetricsProcessor implements IRecordProcessor {
     @Override
     public void initialize(InitializationInput initializationInput) {
@@ -22,7 +25,7 @@ public class MetricsProcessor implements IRecordProcessor {
     public void processRecords(ProcessRecordsInput processRecordsInput) {
         // Iterate through a list of new records to process
         for (Record record : processRecordsInput.getRecords()) {
-            // First we need to de-serialize binary a metric object
+            // First we need to de-serialize a metric object
             Metric metric = parseMetric(record);
             // Now we can process a single record. Here we just print
             // record to a console, but we could also send a notification
@@ -32,11 +35,13 @@ public class MetricsProcessor implements IRecordProcessor {
         }
         // At last we need to signal that this record is processed
         // Once a record is processed it won't be send to our processor again
+        // Here since we don't specify a record to checkout KCL will
+        // checkout the last record in the input records
         checkpoint(processRecordsInput.getCheckpointer());
     }
 
     private Metric parseMetric(Record record) {
-        return KinesisUtils.fromBytes(record.getData());
+        return Utils.fromBytes(record.getData());
     }
 
     private void checkpoint(IRecordProcessorCheckpointer checkpointer) {

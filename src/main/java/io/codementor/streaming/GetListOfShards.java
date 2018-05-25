@@ -7,25 +7,38 @@ import com.amazonaws.services.kinesis.model.ListShardsResult;
 import com.amazonaws.services.kinesis.model.SequenceNumberRange;
 import com.amazonaws.services.kinesis.model.Shard;
 
+/**
+ * Get information about shards in the stream.
+ */
 public class GetListOfShards {
     public static void main(String[] args) {
-        AmazonKinesis client = KinesisUtils.createKinesisClient();
+        AmazonKinesis client = Utils.createKinesisClient();
 
+        // A single request to get a list of shards can return at most
+        // 1,000 shards. If you have more than 1,000 shards you
+        // need to perform additional requests using the "nextToken"
+        // value which is null by default
         String nextToken = null;
 
         do {
             ListShardsRequest listShardsRequest = new ListShardsRequest();
+            // To get a list of shards from a stream we either need
+            // to provide a name of a stream (if this is our first request)
+            // or next token for subsequent requests
             if (nextToken == null)
-                listShardsRequest.setStreamName(KinesisUtils.STREAM_NAME);
-            listShardsRequest.setNextToken(nextToken);
-            listShardsRequest.setMaxResults(1);
+                listShardsRequest.setStreamName(Utils.STREAM_NAME);
+            else
+                listShardsRequest.setNextToken(nextToken);
 
-            System.out.println("Fetching more shards");
+            System.out.println("Fetching Kinesis shards");
             ListShardsResult result = client.listShards(listShardsRequest);
 
             displayShards(result);
 
+            // Get next token to get more shards
             nextToken = result.getNextToken();
+
+            // If we have more shards to get, repeat the loop
         } while (nextToken != null);
     }
 

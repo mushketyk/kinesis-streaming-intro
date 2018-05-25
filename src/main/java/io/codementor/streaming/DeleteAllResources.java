@@ -4,15 +4,18 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.model.ResourceNotFoundException;
 
-import static io.codementor.streaming.KinesisUtils.PROCESSOR_NAME;
-import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
+import static io.codementor.streaming.Utils.KCL_DYNAMODB_TABLE;
+import static io.codementor.streaming.Utils.STREAM_NAME;
 
+/**
+ * Delete all resources created by examples in this project.
+ */
 public class DeleteAllResources {
     public static void main(String[] args) {
-        AmazonKinesis kinesis = KinesisUtils.createKinesisClient();
+        AmazonKinesis kinesis = Utils.createKinesisClient();
         deleteStream(kinesis);
 
-        AmazonDynamoDB dynamoDB = KinesisUtils.createDynamoDBClient();
+        AmazonDynamoDB dynamoDB = Utils.createDynamoDBClient();
         deleteTable(dynamoDB);
     }
 
@@ -27,8 +30,8 @@ public class DeleteAllResources {
 
     private static void deleteTable(AmazonDynamoDB dynamoDB) {
         try {
-            System.out.println("Sending a request to delete DynamoDB table: " + PROCESSOR_NAME);
-            dynamoDB.deleteTable(PROCESSOR_NAME);
+            System.out.println("Sending a request to delete DynamoDB table: " + KCL_DYNAMODB_TABLE);
+            dynamoDB.deleteTable(KCL_DYNAMODB_TABLE);
         } catch (com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException e) {
             System.out.println("Table not found");
         }

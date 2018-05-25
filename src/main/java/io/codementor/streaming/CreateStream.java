@@ -8,21 +8,26 @@ import com.amazonaws.services.kinesis.model.ResourceNotFoundException;
 
 import java.util.concurrent.TimeUnit;
 
-import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
+import static io.codementor.streaming.Utils.STREAM_NAME;
+import static io.codementor.streaming.Utils.sleep;
 
+/**
+ * Creates a Kinesis stream that is used by all other examples.
+ */
 public class CreateStream {
 
     public static void main(String[] args) {
-        AmazonKinesis client = KinesisUtils.createKinesisClient();
+        // Create a Kinesis client
+        AmazonKinesis client = Utils.createKinesisClient();
 
         CreateStreamRequest createStreamRequest = new CreateStreamRequest();
         // Set the name of a new stream
         createStreamRequest.setStreamName(STREAM_NAME);
         // Set initial number of shards
         createStreamRequest.setShardCount(2);
-
+        // Send a request to create a stream
         client.createStream(createStreamRequest);
-
+        // Wait for a stream to be ready to accept read/write requests
         waitForStream(client);
     }
 
@@ -32,21 +37,22 @@ public class CreateStream {
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime + TimeUnit.MINUTES.toMillis(10);
-        while ( System.currentTimeMillis() < endTime ) {
+        while (System.currentTimeMillis() < endTime) {
+            sleep(1000);
             try {
-                Thread.sleep( 1000 );
-            }
-            catch ( Exception e ) {}
-            try {
+                // Get information about the stream
                 DescribeStreamResult describeStreamResponse = client.describeStream(describeStreamRequest);
+                // Get description of a stream
                 String streamStatus = describeStreamResponse.getStreamDescription().getStreamStatus();
-                if (streamStatus.equals( "ACTIVE") ) {
-                    System.out.println("Stream is ACTIVE");
+
+                System.out.println(String.format("The stream is in status %s", streamStatus));
+                if (streamStatus.equals( "ACTIVE")) {
+                    // Stream is created and operational
                     break;
                 }
-                System.out.println(String.format("Stream in status %s", streamStatus));
             }
-            catch ( ResourceNotFoundException e ) {
+            catch (ResourceNotFoundException e) {
+                // Ignore if stream is not yet available
                 System.out.println("Stream was not found");
             }
         }

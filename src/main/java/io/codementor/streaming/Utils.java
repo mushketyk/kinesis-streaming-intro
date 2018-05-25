@@ -10,11 +10,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class KinesisUtils {
+public class Utils {
 
     public static final String STREAM_NAME = "metrics-stream";
 
-    public static final String PROCESSOR_NAME = "metrics-processor";
+    // A name of KCL processor.
+    public static final String KCL_PROCESSOR_NAME = "metrics-processor";
+    public static final String KCL_DYNAMODB_TABLE = KCL_PROCESSOR_NAME;
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -30,6 +32,12 @@ public class KinesisUtils {
                 .build();
     }
 
+    /**
+     * Serialize a metric object into JSON.
+     *
+     * @param metric metric object to serialize
+     * @return a serialized metric object
+     */
     public static ByteBuffer toBytes(Metric metric) {
         try {
             return ByteBuffer.wrap(mapper.writeValueAsBytes(metric));
@@ -38,10 +46,15 @@ public class KinesisUtils {
         }
     }
 
+    /**
+     * Deserialize a metric object from a JSON object.
+     * @param data JSON object to deserialize
+     * @return deserialized metrics object
+     */
     public static Metric fromBytes(ByteBuffer data) {
         try {
             return mapper.readValue(data.array(), Metric.class);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

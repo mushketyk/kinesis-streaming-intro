@@ -8,9 +8,9 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.Random;
 
-import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
-import static io.codementor.streaming.KinesisUtils.sleep;
-import static io.codementor.streaming.KinesisUtils.toBytes;
+import static io.codementor.streaming.Utils.STREAM_NAME;
+import static io.codementor.streaming.Utils.sleep;
+import static io.codementor.streaming.Utils.toBytes;
 
 public class KinesisProducer {
 
@@ -41,7 +41,7 @@ class MetricsProducer implements Runnable {
 
     @Override
     public void run() {
-        AmazonKinesis client = KinesisUtils.createKinesisClient();
+        AmazonKinesis client = Utils.createKinesisClient();
 
         while (true) {
             Metric metric = getCpuLoadMetric();
