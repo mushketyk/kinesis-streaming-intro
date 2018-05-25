@@ -1,13 +1,11 @@
 package io.codementor.streaming;
 
-import java.util.Objects;
-
 public class Metric {
     private String metricName;
     private double value;
 
     public Metric() {
-        
+
     }
 
     public Metric(String metricName, double value) {

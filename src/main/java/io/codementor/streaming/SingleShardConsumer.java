@@ -9,10 +9,14 @@ import com.amazonaws.services.kinesis.model.Record;
 
 import java.util.List;
 
+import static io.codementor.streaming.KinesisUtils.STREAM_NAME;
 import static io.codementor.streaming.KinesisUtils.fromBytes;
 import static io.codementor.streaming.KinesisUtils.sleep;
 
 public class SingleShardConsumer {
+
+    public static final String SHARD_ID = "shardId-000000000000";
+
     public static void main(String[] args) {
 
         AmazonKinesis client = KinesisUtils.createKinesisClient();
@@ -43,9 +47,9 @@ public class SingleShardConsumer {
         // Create a request to get an iterator
         GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
         // Specify a name of the stream to read records from
-        getShardIteratorRequest.setStreamName("metrics-stream");
+        getShardIteratorRequest.setStreamName(STREAM_NAME);
         // Specify what shard to read from
-        getShardIteratorRequest.setShardId("shardId-000000000000");
+        getShardIteratorRequest.setShardId(SHARD_ID);
         // Start reading from the oldest record
         getShardIteratorRequest.setShardIteratorType("TRIM_HORIZON");
 
